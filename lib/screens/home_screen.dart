@@ -14,6 +14,9 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late Setting setting;
   bool isPlayerTimeStoped = true;
+  bool isRunning = false;
+  bool isStop = false;
+  bool isReset = false;
   GetStorage box = GetStorage();
 
   @override

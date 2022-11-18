@@ -1,11 +1,17 @@
 import 'dart:async';
-
-import 'package:countdown_poker/models/elapsed_time.dart';
 import 'package:flutter/material.dart';
 
 class TimerText extends StatefulWidget {
-  const TimerText({super.key, required this.minutes});
+  const TimerText(
+      {super.key,
+      required this.minutes,
+      this.isRunning,
+      this.isPause,
+      this.isReset});
   final double minutes;
+  final bool? isRunning;
+  final bool? isPause;
+  final bool? isReset;
 
   @override
   State<StatefulWidget> createState() => _TimerTextState();
@@ -22,14 +28,24 @@ class _TimerTextState extends State<TimerText> {
   void initState() {
     super.initState();
     calculateTime();
-    timer =
-        Timer(Duration(minutes: _minutes, seconds: _seconds), () => callback);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
   void didUpdateWidget(covariant TimerText oldWidget) {
     super.didUpdateWidget(oldWidget);
     calculateTime();
+    if (widget.isRunning!) {
+      timer = Timer.periodic(
+          const Duration(seconds: 1), (timer) => callback(timer));
+    }
+    if (widget.isPause!) {
+      timer.cancel();
+    }
   }
 
   void calculateTime() {
@@ -44,16 +60,21 @@ class _TimerTextState extends State<TimerText> {
   }
 
   void callback(Timer timer) {
-    // if (stopwatch.isRunning) {
-    //   setState(() {
-    //     milliseconds = stopwatch.elapsedMicroseconds;
-    //   });
-    // }
+    if (widget.isRunning!) {
+      if (_seconds > 0) {
+        setState(() {
+          _seconds = _seconds - 1;
+        });
+      } else if (_minutes > 0) {
+        setState(() {
+          _minutes = _minutes - 1;
+          _seconds = 60;
+        });
+      } else {
+        calculateTime();
+      }
+    }
   }
-
-  // void _onTick(ElapsedTime elapsedTime) {
-  //   if (elapsedTime.minutes != _minutes)
-  // }
 
   @override
   Widget build(BuildContext context) {
