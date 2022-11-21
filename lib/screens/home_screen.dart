@@ -43,26 +43,41 @@ class _HomeScreenState extends State<HomeScreen> {
 
     setState(() {
       setting = _loadFromStorage();
+      isRunning = false;
+      isStop = false;
+      isReset = false;
     });
   }
 
   void _startAction() {
-    setState(() {
-      isPlayerTimeStoped = false;
-    });
+    if (isRunning) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Timer is running')));
+    } else {
+      setState(() {
+        isRunning = true;
+        isStop = false;
+      });
+    }
   }
 
   void _stopPlayerTime() {
     setState(() {
-      if (isPlayerTimeStoped) {
-        isPlayerTimeStoped = false;
+      if (isStop) {
+        isStop = false;
       } else {
-        isPlayerTimeStoped = true;
+        isStop = true;
       }
     });
   }
 
-  void _resetPlayerTime() {}
+  void _resetPlayerTime() {
+    setState(() {
+      isReset = true;
+      isRunning = false;
+      isStop = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,6 +116,10 @@ class _HomeScreenState extends State<HomeScreen> {
             Center(
               child: TimerText(
                 minutes: setting.playerTimer,
+                isRunning: isRunning,
+                isPause: isStop,
+                isReset: isReset,
+                successMsg: "Player time run out",
               ),
             ),
             const SizedBox(height: 32),
@@ -108,7 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Expanded(
                   child: ElevatedButton(
-                    child: Text(isPlayerTimeStoped ? "Stop" : "Resume"),
+                    child: Text(!isStop ? "Stop" : "Resume"),
                     onPressed: () => _stopPlayerTime(),
                   ),
                 ),
@@ -124,6 +143,10 @@ class _HomeScreenState extends State<HomeScreen> {
             Center(
               child: TimerText(
                 minutes: setting.blindTimer,
+                isRunning: isRunning,
+                isPause: isStop,
+                isReset: isReset,
+                successMsg: "Blind time run out",
               ),
             ),
           ]),

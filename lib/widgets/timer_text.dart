@@ -7,11 +7,13 @@ class TimerText extends StatefulWidget {
       required this.minutes,
       this.isRunning,
       this.isPause,
-      this.isReset});
+      this.isReset,
+      required this.successMsg});
   final double minutes;
   final bool? isRunning;
   final bool? isPause;
   final bool? isReset;
+  final String successMsg;
 
   @override
   State<StatefulWidget> createState() => _TimerTextState();
@@ -33,6 +35,7 @@ class _TimerTextState extends State<TimerText> {
   @override
   void dispose() {
     super.dispose();
+    timer.cancel();
   }
 
   @override
@@ -45,6 +48,9 @@ class _TimerTextState extends State<TimerText> {
     }
     if (widget.isPause!) {
       timer.cancel();
+    }
+    if (widget.isReset!) {
+      calculateTime();
     }
   }
 
@@ -72,6 +78,8 @@ class _TimerTextState extends State<TimerText> {
         });
       } else {
         calculateTime();
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(widget.successMsg)));
       }
     }
   }
