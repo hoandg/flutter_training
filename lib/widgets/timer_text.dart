@@ -41,7 +41,6 @@ class _TimerTextState extends State<TimerText> {
   @override
   void didUpdateWidget(covariant TimerText oldWidget) {
     super.didUpdateWidget(oldWidget);
-    calculateTime();
     if (widget.isRunning!) {
       timer = Timer.periodic(
           const Duration(seconds: 1), (timer) => callback(timer));

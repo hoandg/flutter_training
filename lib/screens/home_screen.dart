@@ -45,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
       setting = _loadFromStorage();
       isRunning = false;
       isStop = false;
-      isReset = false;
+      isReset = true;
     });
   }
 
@@ -57,15 +57,19 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() {
         isRunning = true;
         isStop = false;
+        isReset = false;
       });
     }
   }
 
   void _stopPlayerTime() {
     setState(() {
+      isReset = false;
       if (isStop) {
+        isRunning = true;
         isStop = false;
       } else {
+        isRunning = false;
         isStop = true;
       }
     });
